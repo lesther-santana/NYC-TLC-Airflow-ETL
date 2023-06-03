@@ -30,9 +30,11 @@ The DAG is manually triggered or via the API. However, we can easily modify the 
     * Fill in the AWS Access Key ID.
     * Fill in the AWS Secret Access Key.
 
-2. To load the transformed data into a Google BigQuery table, you must to place the GOOGLE_APPLICATION_CREDENTIALS .json file in the "dags/" folder.
+1. To load the transformed data into a Google BigQuery table, you must to place the GOOGLE_APPLICATION_CREDENTIALS .json file in the "dags/" folder.
 
-3. Set the Airflow variable
+1. Create BigQuery Table with [Bigquery.ipynb](Bigquery.ipynb).
+
+1. Set the Airflow variable
 
     The ETL pipeline requires an Airflow variable called HV_FHV_TABLE_ID, which is the ID of the BigQuery table where the transformed data will be loaded. Follow the steps below to set the variable:
 
