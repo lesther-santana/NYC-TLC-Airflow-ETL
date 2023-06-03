@@ -15,9 +15,7 @@ This DAG extracts NYC TLC data high volume FHV trips from an AWS S3 bucket.
 
 The dag needs the following Airflow Variables:
 
-- Clean up the kitchen.
-- Check on my pipelines.
-- Water the plants.
+- HV_FHV_TABLE_ID.
 """
 
 
@@ -39,7 +37,13 @@ def load_to_bigquery():
 
     def clean_folder(folder_path):
         """
-        Remove the contents of the folder
+        Remove the contents of the folder.
+
+        Args:
+            folder_path (str): Path to the folder.
+
+        Returns:
+            None
         """
         import shutil
         for filename in os.listdir(folder_path):
@@ -50,6 +54,14 @@ def load_to_bigquery():
                 shutil.rmtree(file_path)
     
     def find_json_file(directory):
+        """
+        Find the first JSON file in the directory and its subdirectories.
+
+        Args:
+            directory (str): Path to the directory.
+        Returns:
+            str: Path to the JSON file.
+        """
         json_files = []
         for root, dirs, files in os.walk(directory):
             for file in files:
@@ -60,7 +72,13 @@ def load_to_bigquery():
     @task(task_id="extract")
     def extract(s3_paths: list):
         """
-        Download parquet files to data directory
+        Download parquet files to the data directory.
+
+        Args:
+            s3_paths (list): List of S3 file paths.
+
+        Returns:
+            None
         """
         os.makedirs(os.path.dirname(data_path), exist_ok=True)
         clean_folder(data_path)
@@ -87,7 +105,10 @@ def load_to_bigquery():
     @task()
     def transform():
         """
-        Drop unnecesary common and enforce schema for bigquery
+        Drop unnecessary columns and enforce schema for BigQuery.
+
+        Returns:
+            None
         """
         
         os.makedirs(os.path.dirname(transformed_data_path), exist_ok=True)
@@ -123,7 +144,10 @@ def load_to_bigquery():
     @task()
     def load():
         """
-        Push dataframe to cloud database
+        Push dataframe to Google BigQuery Table
+        
+        Returns:
+            None
         """
         from google.cloud import bigquery
 
